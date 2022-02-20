@@ -20,7 +20,7 @@ server.post('/addUser', function(request, response) {
 
     var form = new formidable.IncomingForm();
 
-    form.parse(req, function(err, fields, files) {
+    form.parse(request, function(err, fields, files) {
 
         var imageOldpath = files[0].filetoupload.filepath;
         var imageNewName = Date.now() + files.filetoupload.originalFilename;
@@ -34,28 +34,22 @@ server.post('/addUser', function(request, response) {
         fs.rename(cvOldpath, cvNewpath);
 
         User.create({
-                FullName: fields.fullName,
-                userName: fields.userName,
-                email: fields.email,
-                image: imageNewpath,
-                cv: cvNewpath
-            },
-            function(err) {
-                if (err) return handleError(err);
-                response.redirect('/showUsers');
-            });
+            FullName: fields.fullName,
+            userName: fields.userName,
+            email: fields.email,
+            image: imageNewpath,
+            cv: cvNewpath
+        });
     });
+
+    response.redirect('/showUsers');
 
 
 
 });
 
 server.get('/showUsers', (request, res) => {
-    dbConn.then(function(db) {
-        db.collection('feedbacks').find({}).toArray().then(function(feedbacks) {
-            res.status(200).sendFile(__dirname + "/users.html"); //.json(feedbacks);
-        });
-    });
+    res.status(200).sendFile(__dirname + "/users.html");
 });
 
 

@@ -47,8 +47,7 @@ tbody td {
     position: relative;
 }
 
-tbody td:hover,
-tbody td:before {
+tbody td:hover::before {
     content: "";
     position: absolute;
     left: 0;
