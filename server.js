@@ -1,35 +1,53 @@
-var express = requestuire('express');
-var path = requestuire('path');
-var bodyParser = requestuire('body-parser');
-var mongodb = requestuire('mongodb');
-var formidable = requestuire('formidable');
-var fs = requestuire('fs');
+var express = require('express');
+var path = require('path');
+var bodyParser = require('body-parser');
+var formidable = require('formidable');
+var fs = require('fs');
+var User = require('./userModule');
 
-var dbConn = mongodb.MongoClient.connect('mongodb://localhost:27017');
 
 var server = express();
 
 server.use(bodyParser.urlencoded({ extended: false }));
 server.use(express.static(path.resolve(__dirname, 'Assets')));
 
+server.get('/', function(request, res) {
+    res.sendFile(__dirname + "/index.html")
+});
+
+
 server.post('/addUser', function(request, response) {
 
     var form = new formidable.IncomingForm();
+
     form.parse(req, function(err, fields, files) {
-        var oldpath = files.filetoupload.filepath;
-        var newpath = __dirname + '/assets/images/' + files.filetoupload.originalFilename;
-        fs.rename(oldpath, newpath, function(err) {
-            if (err) throw err;
-            res.write('File uploaded and moved!');
-            res.end();
-        });
+
+        var imageOldpath = files[0].filetoupload.filepath;
+        var imageNewName = Date.now() + files.filetoupload.originalFilename;
+        var imageNewpath = __dirname + '/assets/images/' + imageNewName;
+
+        var cvOldpath = files[1].filetoupload.filepath;
+        var cvNewName = Date.now() + files.filetoupload.originalFilename;
+        var cvNewpath = __dirname + '/assets/cv/' + cvNewName;
+
+        fs.rename(imageOldpath, imageNewpath);
+        fs.rename(cvOldpath, cvNewpath);
+
+        User.create({
+                FullName: fields.fullName,
+                userName: fields.userName,
+                email: fields.email,
+                image: imageNewpath,
+                cv: cvNewpath
+            },
+            function(err) {
+                if (err) return handleError(err);
+                response.redirect('/showUsers');
+            });
     });
 
-    dbConn.then(function(db) {
-        delete request.body._id; // for safety reasons
-        db.collection('feedbacks').insertOne(request.body);
-    });
-    response.redirect('showUsers');
+
+
 });
 
 server.get('/showUsers', (request, res) => {
@@ -40,8 +58,6 @@ server.get('/showUsers', (request, res) => {
     });
 });
 
-server.get('/', function(request, res) {
-    res.sendFile(__dirname + "/index.html")
-});
+
 
 server.listen(process.env.PORT || 3000, process.env.IP || '0.0.0.0');
