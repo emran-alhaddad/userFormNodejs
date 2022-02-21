@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add User</title>
+    <link rel="stylesheet" href="/css/index.css">
+
+</head>
+
+<body>
+    <div class="containerForm">
+        <form method="POST" action="/addUser" id="checkoutForm" enctype="multipart/form-data">
+            <h1>
+                User Information:
+            </h1>
+
+            <label for="fullName">Full-Name</label>
+            <input class="" type="text" id="fullName" name="fullName" placeholder="Your Full Name.." required>
+
+            <label for="userName">User-Name</label>
+            <input class="input" type="text" id="userName" name="userName" placeholder="Your User Name.." required>
+
+            <label for="email">Email</label>
+            <input class="input" type="email" id="email" name="email" placeholder="example@gmail.com" required>
+
+            <label for="photo">Profile-Picture</label>
+            <input class="input" type="file" id="photo" name="photo" required>
+
+            <label for="cv">CV-File</label>
+            <input class="input" type="file" id="cv" name="cv" required>
+
+
+            <button type="submit" style="width: 100%;"> Save</button>
+
+        </form>
+    </div>
+
+</body>
+
+
+</html>

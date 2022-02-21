@@ -1,56 +1,74 @@
 var express = require('express');
-var path = require('path');
-var bodyParser = require('body-parser');
 var formidable = require('formidable');
 var fs = require('fs');
 var User = require('./userModule');
 
 
 var server = express();
+server.set('view engine', 'ejs');
+server.use(express.urlencoded({ extended: true }))
+server.use(express.json());
+server.use(express.static('Assets'));
 
-server.use(bodyParser.urlencoded({ extended: false }));
-server.use(express.static(path.resolve(__dirname, 'Assets')));
+server.get('/', function(req, res) {
+    res.render("index")
 
-server.get('/', function(request, res) {
-    res.sendFile(__dirname + "/index.html")
 });
 
-
-server.post('/addUser', function(request, response) {
+server.post('/addUser', (req, res) => {
 
     var form = new formidable.IncomingForm();
+    var fullName, userName, email, image, cv;
 
-    form.parse(request, function(err, fields, files) {
+    form.parse(req, function(err, fields, files) {
+        if (fields) {
+            fullName = fields.fullName;
+            userName = fields.userName;
+            email = fields.email;
+        }
 
-        var imageOldpath = files[0].filetoupload.filepath;
-        var imageNewName = Date.now() + files.filetoupload.originalFilename;
-        var imageNewpath = __dirname + '/assets/images/' + imageNewName;
+        if (files) {
 
-        var cvOldpath = files[1].filetoupload.filepath;
-        var cvNewName = Date.now() + files.filetoupload.originalFilename;
-        var cvNewpath = __dirname + '/assets/cv/' + cvNewName;
+            var Image = getFileInfo(files.photo, '\\Assets\\uploads\\images\\');
+            var CV = getFileInfo(files.cv, '\\Assets\\uploads\\cv\\');
 
-        fs.rename(imageOldpath, imageNewpath);
-        fs.rename(cvOldpath, cvNewpath);
-
+            fs.rename(Image.oldPath, Image.newPath, () => {});
+            fs.rename(CV.oldPath, CV.newPath, () => {});
+        }
         User.create({
-            FullName: fields.fullName,
-            userName: fields.userName,
-            email: fields.email,
-            image: imageNewpath,
-            cv: cvNewpath
+            FullName: fullName,
+            userName: userName,
+            email: email,
+            image: Image.name,
+            cv: CV.name
         });
+        res.redirect('/showUsers');
     });
-
-    response.redirect('/showUsers');
-
-
 
 });
 
 server.get('/showUsers', (request, res) => {
-    res.status(200).sendFile(__dirname + "/users.html");
+    User.find((err, data) => {
+        if (err) console.log(err);
+        else res.render("users", { Users: data });
+    });
+
 });
+
+
+function getFileInfo(file, destination) {
+    var extention = file.originalFilename.split(".").pop();
+    var fileName = Date.now() + "-" + (Math.random() * 1e20) + "." + extention;
+    var oldPath = file.filepath;
+    var newPath = __dirname + destination + fileName;
+
+    return {
+        extention: extention,
+        name: fileName,
+        oldPath: oldPath,
+        newPath: newPath
+    }
+}
 
 
 
