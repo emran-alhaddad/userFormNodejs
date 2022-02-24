@@ -47,13 +47,13 @@ server.post('/addUser', (req, res) => {
 
 });
 
-server.get('/showUsers', (request, res) => {
-    User.find((err, data) => {
-        if (err) console.log(err);
-        else res.render("users", { Users: data });
-    });
+// server.get('/showUsers', (request, res) => {
+//     User.find((err, data) => {
+//         if (err) console.log(err);
+//         else res.render("users", { Users: data });
+//     });
 
-});
+// });
 
 
 function getFileInfo(file, destination) {

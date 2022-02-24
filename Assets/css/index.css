@@ -9,25 +9,16 @@
 
 body {
     background-color: white;
-    transition: all ease-in-out 0.8s;
+    /* transition: all ease-in-out 0.8s; */
 }
 
 input {
-    width: 100%;
     padding: 12px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
-    margin-top: 6px;
-    margin-bottom: 16px;
-    resize: vertical;
-    border-left: 5px solid var(--border-focused-false);
 }
 
 button {
-    background-color: #04AA6D;
+   
     color: white;
-    font-family: 'Source Sans Pro', sans-serif;
     font-size: 18px;
     padding: 6px 25px;
     margin-top: 4px;
@@ -38,11 +29,12 @@ button {
 }
 
 button:hover {
-    background-color: #47e7ad;
+    background-color: black;
+    color: white;
 }
 
 #prevBtn {
-    background-color: darkred;
+    background-color: rgb(241, 238, 238);
 }
 
 #prevBtn:hover {
@@ -50,14 +42,14 @@ button:hover {
 }
 
 .containerForm {
-    border-radius: 17px;
+    /* border-radius: 17px;
     color: black;
     padding: 20px;
     margin: 20px auto;
     width: 30vw;
     padding-top: 60px;
     position: relative;
-    box-shadow: 0 0 10px;
+    box-shadow: 0 0 10px; */
 }
 
 .inputSuccessLightThem {

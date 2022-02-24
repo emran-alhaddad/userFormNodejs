@@ -38,7 +38,7 @@ thead th {
 }
 
 tbody tr:hover {
-    background-color: rgba(255, 255, 255, 0.3);
+    background-color: rgba(253, 10, 10, 0.3);
 }
 
 tbody td {
@@ -52,6 +52,6 @@ tbody td:hover::before {
     right: 0;
     top: -9999px;
     bottom: -9999px;
-    background-color: rgba(255, 255, 255, 0.2);
+    background-color: rgba(238, 3, 3, 0.2);
     z-index: -1;
 }
